@@ -41,7 +41,7 @@ export async function DecryptQmcWasm(qmcBlob: ArrayBuffer, ext: string): Promise
 
   // 进行解密初始化
   console.log('start dec prepare');
-  const tailSize = QmcCrypto.preDec(pQmcBuf, qmcBuf.length, ext)
+  const tailSize = QmcCrypto.preDec(pQmcBuf, DECRYPTION_BUF_SIZE, ext)
   if (tailSize == -1) {
     result.error = QmcCrypto.getError();
     console.log('dec error');
