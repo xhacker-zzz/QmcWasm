@@ -120,7 +120,7 @@ public:
     }
     
     int PreDecode(std::string ext) {
-        std::string cipherType = checkType(ext);
+        cipherType = checkType(ext);
         size_t tailSize = 0;
         if (cipherType == "QTag") {
             tailSize = 8;
