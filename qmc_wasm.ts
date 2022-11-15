@@ -1,7 +1,7 @@
 import QmcCryptoModule from '@/QmcWasm/QmcWasmBundle';
 import { MergeUint8Array } from '@/utils/MergeUint8Array';
 
-// 每次处理 2M 的数据
+// 每次处理 1M 的数据
 const DECRYPTION_BUF_SIZE = 1024 * 1024;
 
 export interface QMC2DecryptionResult {
