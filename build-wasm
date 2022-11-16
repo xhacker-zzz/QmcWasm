@@ -24,7 +24,7 @@ source ./emsdk_env.sh
 popd # build/emsdk
 
 pushd build/wasm
-emcmake cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" $(pwd)
+emcmake cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ../..
 make -j
 TARGET_FILES="
 	QmcLegacy.js
