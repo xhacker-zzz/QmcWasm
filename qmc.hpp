@@ -1,6 +1,5 @@
 #include <string.h>
 #include <cmath>
-#include <sstream>
 #include <vector>
 #include <arpa/inet.h>
 #include "qmc_key.hpp"
@@ -20,21 +19,23 @@ private:
     std::string checkType(std::string fn) {
         if (fn.find(".qmc") < fn.size() || fn.find(".m") < fn.size())
         {
-            std::ostringstream buf_tag;
-            buf_tag.width(4);
-            buf_tag << (blobData.data() + blobData.size() - 4);
-            if (buf_tag.str() == "QTag")
+            std::string buf_tag = "";
+            for (int i = 4; i > 0; --i)
             {
-                keySize = ntohl(*((uint32_t*)blobData.data() + blobData.size() - 8));
+                buf_tag += *((char*)blobData.data() + blobData.size() - i);
+            }
+            if (buf_tag == "QTag")
+            {
+                keySize = ntohl(*(uint32_t*)(blobData.data() + blobData.size() - 8));
                 return "QTag";
             }
-            else if (buf_tag.str() == "STag")
+            else if (buf_tag == "STag")
             {
                return "STag";
             }
             else
             {
-                keySize = (*(uint32_t*)(buf_tag.str().data()));
+                keySize = (*(uint32_t*)(blobData.data() + blobData.size() - 4));
                 if (keySize < 0x400)
                 {
                     return "Map/RC4";
@@ -61,30 +62,38 @@ private:
     }
 
     bool parseRawKeyQTag() {
-        std::vector<std::string> items;
-        items.resize(3);
-        int index = 2;
-        for (int i = rawKeyBuf.size() - 1; i >= 0; i--)
+        std::string ketStr = "";
+        std::string::size_type index = 0;
+        ketStr.append((char*)rawKeyBuf.data(), rawKeyBuf.size());
+        index = ketStr.find(",", 0);
+        if (index != std::string::npos)
         {
-            if (rawKeyBuf[i] == ',')
-            {
-                if (index == 1)
-                {
-                    rawKeyBuf.resize(i);
-                }
-                index--;
-                if (index < 0)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                items[index] = (char)rawKeyBuf[i] + items[index];
-            }
+            rawKeyBuf.resize(index);
         }
-        this->songId = items[1];
-        this->mediaVer = std::stoi(items[2]);
+        else
+        {
+            return false;
+        }
+        ketStr = ketStr.substr(index + 1);
+        index = ketStr.find(",", 0);
+        if (index != std::string::npos)
+        {
+            this->songId = ketStr.substr(0, index);
+        }
+        else
+        {
+            return false;
+        }
+        ketStr = ketStr.substr(index + 1);
+        index = ketStr.find(",", 0);
+        if (index == std::string::npos)
+        {
+            this->mediaVer = std::stoi(ketStr);
+        }
+        else
+        {
+            return false;
+        }
         return true;
     }
 
