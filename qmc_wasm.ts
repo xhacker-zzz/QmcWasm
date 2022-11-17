@@ -1,8 +1,8 @@
 import QmcCryptoModule from '@/QmcWasm/QmcWasmBundle';
 import { MergeUint8Array } from '@/utils/MergeUint8Array';
 
-// 每次处理 1M 的数据
-const DECRYPTION_BUF_SIZE = 1024 * 1024;
+// 每次处理 2M 的数据
+const DECRYPTION_BUF_SIZE = 2 *1024 * 1024;
 
 export interface QMC2DecryptionResult {
   success: boolean;
@@ -40,15 +40,14 @@ export async function DecryptQmcWasm(qmcBlob: ArrayBuffer, ext: string): Promise
   QmcCrypto.writeArrayToMemory(qmcBuf.slice(-DECRYPTION_BUF_SIZE), pQmcBuf);
 
   // 进行解密初始化
-  console.log('start dec prepare');
-  const tailSize = QmcCrypto.preDec(pQmcBuf, DECRYPTION_BUF_SIZE, ext)
+  ext = '.' + ext;
+  const tailSize = QmcCrypto.preDec(pQmcBuf, DECRYPTION_BUF_SIZE, ext);
   if (tailSize == -1) {
     result.error = QmcCrypto.getError();
-    console.log('dec error');
     return result;
   } else {
     result.songId = QmcCrypto.getSongId();
-    console.log('prepare success');
+    result.songId = result.songId == "0" ? 0 : result.songId;
   }
 
   const decryptedParts = [];
