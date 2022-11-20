@@ -1,4 +1,4 @@
-﻿// QMC2-wasm.cpp : Defines the entry point for the application.
+﻿// QmcWasm.cpp : Defines the entry point for the application.
 //
 
 #include "QmcWasm.h"

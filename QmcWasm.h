@@ -1,4 +1,4 @@
-﻿// QMC2-wasm.h : Include file for standard system include files,
+﻿// QmcWasm.h : Include file for standard system include files,
 // or project specific include files.
 
 #pragma once

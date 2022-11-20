@@ -12,7 +12,7 @@ export interface QMC2DecryptionResult {
 }
 
 /**
- * 解密一个 QMC2 加密的文件。
+ * 解密一个 Qmc 加密的文件。
  *
  * 如果检测并解密成功，返回解密后的 Uint8Array 数据。
  * @param  {ArrayBuffer} qmcBlob 读入的文件 Blob
@@ -34,7 +34,7 @@ export async function DecryptQmcWasm(qmcBlob: ArrayBuffer, ext: string): Promise
     return result;
   }
 
-  // 申请内存块，并文件末端数据到 WASM 的内存堆
+  // 申请内存块，写入文件末端数据到 WASM 的内存堆
   const qmcBuf = new Uint8Array(qmcBlob);
   const pQmcBuf = QmcCrypto._malloc(DECRYPTION_BUF_SIZE);
   QmcCrypto.writeArrayToMemory(qmcBuf.slice(-DECRYPTION_BUF_SIZE), pQmcBuf);
